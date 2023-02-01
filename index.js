@@ -1,8 +1,9 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 
 app.use(express.json())
-
+app.use(cors())
 const morgan = require('morgan')
 
 morgan.token('body', function (req, res) {
@@ -98,7 +99,6 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
-
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
