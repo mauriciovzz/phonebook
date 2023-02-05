@@ -7,8 +7,8 @@ const Person = require('./models/person.js')
 
 const morgan = require('morgan')
 
-morgan.token('body', function (req, res) {
-  return JSON.stringify(req.body)
+morgan.token('body', function (request) {
+  return JSON.stringify(request.body)
 })
 
 const errorHandler = (error, request, response, next) => {
@@ -55,7 +55,7 @@ app.post('/api/persons', (request, response, next) => {
     name: body.name,
     number: body.number,
   })
-  
+
   person
     .save()
     .then(result => {
@@ -76,23 +76,28 @@ app.put('/api/persons/:id', (request, response, next) => {
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
-    .catch(error => next(error))  
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person
     .findByIdAndDelete(request.params.id)
-    .then(result => {
-      response.status(204).end()   
+    .then( () => {
+      response.status(204).end()
     })
-    .catch(error => next(error))  
+    .catch(error => next(error))
 })
 
-app.get('/api/info', (request, response) => {
-  response.send(
-    `<div>Phonebook has info for ${persons.length} people</div>
-     <div>${new Date()}</div>`
-  )
+app.get('/api/info', (request, response, next) => {
+  Person
+    .countDocuments({})
+    .then(result => {
+      response.send(
+        `<div>Phonebook has info for ${result} people</div>
+        <div>${new Date()}</div>`
+      )
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {

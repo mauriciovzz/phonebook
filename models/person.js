@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-var uniqueValidator = require('mongoose-unique-validator');
+var uniqueValidator = require('mongoose-unique-validator')
 
 mongoose.set('strictQuery',false)
 
@@ -8,7 +8,7 @@ const url = process.env.MONGODB_URI
 console.log('connecting to', url)
 
 mongoose.connect(url)
-  .then(result => {
+  .then( () => {
     console.log('connected to MongoDB')
   })
   .catch((error) => {
@@ -26,7 +26,7 @@ const personSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: function(v) {
-        return /(\d{2}-\d{6,})|(\d{3}-\d{5,})/.test(v);
+        return /(\d{2}-\d{6,})|(\d{3}-\d{5,})/.test(v)
       },
       message: 'Provided phone number is invalid.'
     },
@@ -34,7 +34,7 @@ const personSchema = new mongoose.Schema({
   },
 })
 
-personSchema.plugin(uniqueValidator);
+personSchema.plugin(uniqueValidator)
 
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
@@ -45,5 +45,3 @@ personSchema.set('toJSON', {
 })
 
 module.exports = mongoose.model('Person', personSchema)
-
-
